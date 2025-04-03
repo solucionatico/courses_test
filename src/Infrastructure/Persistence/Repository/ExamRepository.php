@@ -3,11 +3,20 @@
 namespace App\Infrastructure\Persistence\Repository;
 
 use App\Domain\Repository\RepositoryInterface;
-use App\Domain\Entity\ExamEntity;
-use App\Domain\Entity\ExamTypeEntity;
+use App\Infrastructure\Persistence\Mapper\ExamMapper;
 
+/**
+ * Repository of Exam Entity
+ * Query manager for `exam` table
+ */
 class ExamRepository extends AbstractRepository implements RepositoryInterface
 {
+    /**
+     * Search exams by name
+     *
+     * @param string $name Name or term to search
+     * @return array List of exams mapped to DTO objects
+     */
     public function findByName(string $name) {
         if (strlen($name) < 3) {
             return [];
@@ -27,8 +36,7 @@ class ExamRepository extends AbstractRepository implements RepositoryInterface
         // Fill results in Entity
         $examList = [];
         foreach ($result as $row) {
-            $examType = new ExamTypeEntity($row['id_exam_type'], $row['exam_type_name']);
-            $examList[] = new ExamEntity($row['id_exam'], $row['name'], $examType);
+            $examList[] = ExamMapper::map($row);
         }
 
         return $examList;

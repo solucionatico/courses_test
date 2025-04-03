@@ -3,10 +3,20 @@
 namespace App\Infrastructure\Persistence\Repository;
 
 use App\Domain\Repository\RepositoryInterface;
-use App\Domain\Entity\ClassEntity;
+use App\Infrastructure\Persistence\Mapper\ClassMapper;
 
+/**
+ * Repository of Class Entity
+ * Query manager for `classes` table
+ */
 class ClassRepository extends AbstractRepository implements RepositoryInterface
 {
+    /**
+     * Search classes by name
+     *
+     * @param string $name Name or term to search
+     * @return array List of classes mapped to DTO objects
+     */
     public function findByName(string $name) {
         if (strlen($name) < 3) {
             return [];
@@ -21,7 +31,7 @@ class ClassRepository extends AbstractRepository implements RepositoryInterface
         // Fill results in Entity
         $classList = [];
         foreach ($result as $row) {
-            $classList[] = new ClassEntity($row['id_class'], $row['name'], $row['score'], $row['base_score']);
+            $classList[] = ClassMapper::map($row);
         }
 
         return $classList;

@@ -4,11 +4,21 @@ namespace App\Infrastructure\Persistence;
 
 use PDO;
 
+/**
+ * Database class type PDO to manage the DB connection as Singleton
+ */
 class Database extends PDO
 {
+    /**
+     * @var Database|null Store a unique instance of Database
+     */
     private static $instance = null;
 
-    /** Prevent to instance **/
+    /**
+     * Private constructor to prevent directly instance
+     *
+     * @param array $config Configuration of database connection array{server: string, port: int, dbname: string, user: string, password: string}
+     */
     private function __construct(array $config)
     {
         $connectionLink = 'mysql:host=' . $config['server'] . ';port=' . $config['port'] . ';dbname=' . $config['dbname'] . ';charset=utf8';
@@ -18,7 +28,11 @@ class Database extends PDO
         ]);
     }
 
-    /** Correct way to get an instance **/
+    /**
+     * Get the unique instance of Database
+     *
+     * @return Database Instance of connection to Database
+     */
     public static function getInstance()
     {
         if (self::$instance === null) {

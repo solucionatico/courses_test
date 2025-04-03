@@ -18,3 +18,10 @@ Cree la base de datos en su entorno local y ejecute el siguiente comando
 ```sh
 php main.php install
 ```
+
+## Uso
+```sh
+php main.php search <término>
+```
+
+`término` es el texto que se utilizará para encontrar Clases y Exámenes en la base de datos (según su nombre). La búsqueda se realizará por los tres primeras letras del `término`.

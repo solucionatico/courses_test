@@ -2,14 +2,22 @@
 
 namespace App\Infrastructure\Console;
 
+use App\Container;
 use App\Infrastructure\Persistence\Database;
 
-class InstallCommand extends AbstractCommand
+/**
+ * Console command to install database structure and data for this project
+ */
+ class InstallCommand extends AbstractCommand
 {
+    /**
+     * Execute install command
+     */
     public function execute()
     {
         Logger::print('Installing DB...');
-        $db = Database::getInstance();
+
+        $db = Container::get(Database::class);
         $sql = file_get_contents(_ROOT_DIR_ . 'install.sql');
 
         try {
