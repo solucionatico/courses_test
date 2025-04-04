@@ -10,10 +10,11 @@ use App\Infrastructure\Persistence\Database;
 abstract class AbstractMapper
 {
     /**
-     * Map an data array to a DTO Object
+     * Map a Entity array to a DTO Object
      *
-     * @param array $data Data from database
-     * @return ExamDTO DTO Object with mapped data
+     * @param array $entityList
+     * @return array DTO
      */
-    abstract public static function map(array $data);
+
+    abstract public static function mapDTO(array $result);
 }

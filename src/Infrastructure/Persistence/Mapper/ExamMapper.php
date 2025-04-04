@@ -2,9 +2,9 @@
 
 namespace App\Infrastructure\Persistence\Mapper;
 
-use App\Container;
-use App\Domain\DTO\ExamDTO;
-use App\Domain\DTO\ExamTypeDTO;
+use App\Domain\Entity\ExamEntity;
+use App\Infrastructure\Persistence\DTO\ExamDTO;
+use App\Infrastructure\Persistence\DTO\ExamTypeDTO;
 
 /**
  * Class to mapping data to DTO Objects
@@ -14,15 +14,26 @@ class ExamMapper extends AbstractMapper
     /**
      * Map an data array to a DTO Object
      *
-     * @param array $data Data from database
-     * @return ExamDTO DTO Object with mapped data
+     * @param ExamEntity[] $entityList
+     * @return ExamDTO[]
      */
-    public static function map(array $data)
+    public static function mapDTO(array $entityList)
     {
-        return new ExamDTO(
-            $data['id_exam'],
-            $data['name'],
-            new ExamTypeDTO($data['id_exam_type'], $data['exam_type_name'])
-        );
+        $classList = [];
+
+        /** @var ExamEntity $entity */
+        foreach($entityList as $entity) {
+            $examTypeDTO = new ExamTypeDTO(
+                $entity->getExamType()->getId(),
+                $entity->getExamType()->getName()
+            );
+            $classList[] = new ExamDTO(
+                $entity->getId(),
+                $entity->getName(),
+                $examTypeDTO
+            );
+        }
+
+        return $classList;
     }
 }

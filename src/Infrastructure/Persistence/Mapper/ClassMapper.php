@@ -2,7 +2,8 @@
 
 namespace App\Infrastructure\Persistence\Mapper;
 
-use App\Domain\DTO\ClassDTO;
+use App\Domain\Entity\ClassEntity;
+use App\Infrastructure\Persistence\DTO\ClassDTO;
 
 /**
  * Class to mapping data to DTO Objects
@@ -12,16 +13,23 @@ class ClassMapper extends AbstractMapper
     /**
      * Map an data array to a DTO Object
      *
-     * @param array $data Data from database
-     * @return ExamDTO DTO Object with mapped data
+     * @param ClassEntity[] $entityList
+     * @return ClassDTO[]
      */
-    public static function map(array $data)
+    public static function mapDTO(array $entityList)
     {
-        return new ClassDTO(
-            $data['id_class'],
-            $data['name'],
-            (int) $data['score'],
-            (int) $data['base_score']
-        );
+        $classDTOList = [];
+
+        /** @var ClassEntity $entity */
+        foreach($entityList as $entity) {
+            $classDTOList[] = new ClassDTO(
+                $entity->getId(),
+                $entity->getName(),
+                $entity->getScore(),
+                $entity->getBaseScore()
+            );
+        }
+
+        return $classDTOList;
     }
 }

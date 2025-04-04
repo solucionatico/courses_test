@@ -2,6 +2,8 @@
 
 namespace App\Infrastructure\Console;
 
+use App\Infrastructure\Persistence\Database;
+
 /**
  * Abstract Class to console commands
  */
@@ -13,6 +15,19 @@ abstract class AbstractCommand
      * @var mixed
      */
     protected $argument = null;
+
+    /**
+     * @var Database Database instance
+     */
+    protected $db;
+
+    /**
+     * Constructor for SearchCommand
+     */
+    public function __construct(Database $db)
+    {
+        $this->db = $db;
+    }
 
     /**
      * Execute command

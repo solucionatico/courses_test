@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\DTO;
+namespace App\Infrastructure\Persistence\DTO;
 
 /**
  * Data Transfer Object (DTO) for Exam Type

@@ -1,5 +1,5 @@
 -- DATABASE STRUCTURE
-DROP TABLE `classes`;
+DROP TABLE IF EXISTS `classes`;
 CREATE TABLE `classes` (
     `id_class` INT NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL,
@@ -8,14 +8,14 @@ CREATE TABLE `classes` (
     PRIMARY KEY (`id_class`)
 );
 
-DROP TABLE `exam_type`;
+DROP TABLE IF EXISTS `exam_type`;
 CREATE TABLE `exam_type` (
     `id_exam_type` INT NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL,
     PRIMARY KEY (`id_exam_type`)
 );
 
-DROP TABLE `exam`;
+DROP TABLE IF EXISTS `exam`;
 CREATE TABLE `exam` (
     `id_exam` INT NOT NULL AUTO_INCREMENT,
     `id_exam_type` INT NOT NULL,

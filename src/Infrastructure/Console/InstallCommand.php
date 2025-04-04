@@ -17,11 +17,10 @@ use App\Infrastructure\Persistence\Database;
     {
         Logger::print('Installing DB...');
 
-        $db = Container::get(Database::class);
         $sql = file_get_contents(_ROOT_DIR_ . 'install.sql');
 
         try {
-            $db->exec($sql);
+            $this->db->exec($sql);
             Logger::print('Done.');
         } catch (Exception $ex) {
             Logger::print($ex->getTrace());

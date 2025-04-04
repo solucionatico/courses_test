@@ -3,10 +3,12 @@
 namespace App\Infrastructure\Console;
 
 use App\Container;
-use App\Infrastructure\Persistence\Database;
 use App\Infrastructure\Persistence\Repository\ClassRepository;
 use App\Infrastructure\Persistence\Repository\ExamRepository;
-use App\Services\SearchService;
+use App\Infrastructure\Persistence\Mapper\ClassMapper;
+use App\Infrastructure\Persistence\Mapper\ExamMapper;
+use App\Domain\UseCase\FindClassByNameUseCase;
+use App\Domain\UseCase\FindExamByNameUseCase;
 
 /**
  * Console command to make searchers in Classes and Exams
@@ -23,25 +25,47 @@ class SearchCommand extends AbstractCommand
             exit;
         }
 
-        /** Init the search service **/
-        $db = Container::get(Database::class);
-        $searchService = Container::get(SearchService::class, [
-            Container::get(ClassRepository::class, [ $db ]),
-            Container::get(ExamRepository::class, [ $db ]),
-        ]);
-
-        $result = $searchService->search($this->argument);
-
-        foreach ($result['classes'] as $row) {
-            Logger::print('Clase: ' . $row['name'] . ' | ' . $row['score'] . '/' . $row['base_score']);
-        }
-
-        foreach ($result['exams'] as $row) {
-            Logger::print('Examen: ' . $row['name'] . ' | ' . $row['type']);
-        }
+        $this->searchClass();
+        $this->searchExam();
 
         Logger::print('------------------------');
         Logger::print('Finished');
         exit;
+    }
+
+    /**
+     * Search for classes with term
+     */
+    private function searchClass()
+    {
+        $findClassUseCase = Container::get(FindClassByNameUseCase::class, [
+            Container::get(ClassRepository::class, [ $this->db ])
+        ]);
+
+        $classEntityList = $findClassUseCase->execute($this->argument);
+
+        // Map Entity to DTO
+        $classDTOList = ClassMapper::mapDTO($classEntityList);
+        foreach ($classDTOList as $classDTO) {
+            Logger::print('Clase: ' . $classDTO->name . ' | ' . $classDTO->score . '/' . $classDTO->baseScore);
+        }
+    }
+
+    /**
+     * Search for exams with term
+     */
+    private function searchExam()
+    {
+        $findExamUseCase = Container::get(FindExamByNameUseCase::class, [
+            Container::get(ExamRepository::class, [ $this->db ])
+        ]);
+
+        $examEntityList = $findExamUseCase->execute($this->argument);
+
+        // Map Entity to DTO
+        $examDTOList = ExamMapper::mapDTO($examEntityList);
+        foreach ($examDTOList as $examDTO) {
+            Logger::print('Examen: ' . $examDTO->name . ' | ' . $examDTO->examType->name);
+        }
     }
 }
