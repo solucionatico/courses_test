@@ -21,8 +21,7 @@ class Database extends PDO
      */
     private function __construct(array $config)
     {
-        $connectionLink = 'mysql:host=' . $config['server'] . ';port=' . $config['port'] . ';dbname=' . $config['dbname'] . ';charset=utf8';
-        parent::__construct($connectionLink, $config['user'], $config['password'], [
+        parent::__construct($config['dsn'], $config['user'], $config['password'], [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         ]);
@@ -33,11 +32,11 @@ class Database extends PDO
      *
      * @return Database Instance of connection to Database
      */
-    public static function getInstance()
+    public static function getInstance(string $driver = 'mysql')
     {
-        if (self::$instance === null) {
+        if (is_null(self::$instance)) {
             $config = require _CONFIG_DIR_ . 'database.php';
-            self::$instance = new Database($config);
+            self::$instance = new Database($config[$driver]);
         }
         return self::$instance;
     }
